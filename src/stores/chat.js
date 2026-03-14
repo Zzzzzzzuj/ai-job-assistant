@@ -117,7 +117,7 @@ export const useChatStore = defineStore('chat', () => {
     {
       id: 'general',
       name: '🌟 通用编程助手',
-      prompt: '你是一个全能的编程助手，负责解答用户的前后端开发问题，回答尽量简洁明了。'
+      prompt: '你是一个智能助手，可以回答用户的任何问题，回答尽量简洁明了。'
     },
     {
       id: 'interviewer',
@@ -139,8 +139,8 @@ export const useChatStore = defineStore('chat', () => {
     }
   ])
 
-  // 新增：当前选中的角色 ID，默认选中面试官
-  const currentRoleId = ref('interviewer')
+  // 当前选中的角色 ID，默认通用助手
+  const currentRoleId = ref('general')
 
   const currentSession = computed(() => {
     return sessions.value.find((item) => item.id === currentSessionId.value)
