@@ -17,7 +17,7 @@ function goJobAssistant() {
 <template>
   <div class="home-page" :class="{ dark: themeStore.isDark }">
     <div class="home-card">
-      <h1 class="home-title">AI 求职助手</h1>
+      <h1 class="home-title">momo的AI求职助手</h1>
       <p class="home-desc">
         智能分析 JD、匹配简历、定向润色，全面助力求职
       </p>
