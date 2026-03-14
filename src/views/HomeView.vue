@@ -17,20 +17,22 @@ function goJobAssistant() {
 <template>
   <div class="home-page" :class="{ dark: themeStore.isDark }">
     <div class="home-card">
-      <h1 class="home-title">momo的语聊小精灵</h1>
+      <h1 class="home-title">AI 求职助手</h1>
       <p class="home-desc">
-        基于 Vue3 + Pinia + Web Speech API 的智能语音与文本聊天应用
+        智能分析 JD、匹配简历、定向润色，全面助力求职
       </p>
       <div class="home-tags">
-        <span>多会话管理</span>
-        <span>流式输出</span>
-        <span>语音输入</span>
-        <span>历史记录持久化</span>
+        <span>智能聊天</span>
+        <span>JD 分析</span>
+        <span>简历匹配</span>
+        <span>定向润色</span>
+        <span>求职诊断</span>
       </div>
       <div class="home-buttons">
         <button class="enter-btn" @click="goChat">开始聊天</button>
-        <button class="enter-btn job-btn" @click="goJobAssistant">AI 求职助手</button>
+        <button class="enter-btn job-btn" @click="goJobAssistant">进入求职助手</button>
       </div>
+      <p class="home-notice">提示：当前为测试版。首次分析可能稍慢，因后端服务冷启动；请勿输入身份证号、手机号、家庭住址等敏感个人信息。</p>
     </div>
   </div>
 </template>
@@ -197,5 +199,17 @@ function goJobAssistant() {
 .home-page.dark .job-btn:hover {
   background: rgba(52, 168, 120, 0.25);
   border-color: rgba(52, 168, 120, 0.5);
+}
+
+.home-notice {
+  margin: 24px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #7abf9e;
+  text-align: center;
+}
+
+.home-page.dark .home-notice {
+  color: #3d7a5e;
 }
 </style>
