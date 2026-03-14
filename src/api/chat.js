@@ -1,22 +1,4 @@
-function getChatConfig() {
-  const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
-  const baseUrl = import.meta.env.VITE_DEEPSEEK_BASE_URL
-  const model = import.meta.env.VITE_DEEPSEEK_MODEL
-
-  if (!apiKey) {
-    throw new Error('没有读取到 DeepSeek API Key，请检查 .env 文件')
-  }
-
-  if (!baseUrl) {
-    throw new Error('没有读取到 DeepSeek Base URL，请检查 .env 文件')
-  }
-
-  if (!model) {
-    throw new Error('没有读取到 DeepSeek Model，请检查 .env 文件')
-  }
-
-  return { apiKey, baseUrl, model }
-}
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 async function parseStreamResponse(response, onChunk) {
   if (!response.body) {
@@ -80,20 +62,12 @@ async function parseStreamResponse(response, onChunk) {
 }
 
 export async function sendChatRequestStream(messages, onChunk, signal) {
-  const { apiKey, baseUrl, model } = getChatConfig()
-
-  const response = await fetch(`${baseUrl}/chat/completions`, {
+  const response = await fetch(`${BASE_URL}/api/chat`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({
-      model,
-      messages,
-      stream: true,
-      temperature: 0.7,
-    }),
+    body: JSON.stringify({ messages }),
     signal,
   })
 

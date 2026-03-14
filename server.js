@@ -168,6 +168,64 @@ function parseResult(taskType, raw) {
   return JSON.parse(jsonStr)
 }
 
+// ── 聊天流式接口 ────────────────────────────────────────────
+app.post('/api/chat', async (req, res) => {
+  const { messages } = req.body
+
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({ error: '缺少 messages 参数' })
+  }
+
+  if (!DEEPSEEK_API_KEY) {
+    return res.status(500).json({ error: '服务端未配置 DEEPSEEK_API_KEY' })
+  }
+
+  try {
+    const upstream = await fetch(DEEPSEEK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        stream: true,
+        temperature: 0.7
+      })
+    })
+
+    if (!upstream.ok) {
+      const err = await upstream.text()
+      return res.status(upstream.status).json({ error: `DeepSeek API 错误: ${err}` })
+    }
+
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.flushHeaders()
+
+    const reader = upstream.body.getReader()
+    const decoder = new TextDecoder('utf-8')
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      const chunk = decoder.decode(value, { stream: true })
+      res.write(chunk)
+    }
+
+    res.end()
+  } catch (err) {
+    console.error('[chat error]', err.message)
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message })
+    } else {
+      res.end()
+    }
+  }
+})
+
 // ── 路由 ─────────────────────────────────────────────────────
 app.post('/api/ai/task', async (req, res) => {
   const { taskType, ...body } = req.body
